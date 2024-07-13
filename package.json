@@ -11,7 +11,29 @@
   "jest": {
     "transform": {
       "^.+\\.js?$": "babel-jest"
-    }
+    },
+    "reporters": [
+      "default",
+      [
+        "jest-junit",
+        {
+          "outputDirectory": "./reports",
+          "outputName": "junit.xml"
+        }
+      ],
+      [
+        "jest-html-reporter",
+        {
+          "outputPath": "./reports/test-report.html"
+        }
+      ]
+    ],
+    "coverageDirectory": "./coverage",
+    "coverageReporters": [
+      "text",
+      "cobertura",
+      "html"
+    ]
   },
   "author": "Devsu",
   "dependencies": {
@@ -26,6 +48,8 @@
     "babel-jest": "29.5.0",
     "dotenv": "16.0.3",
     "jest": "29.5.0",
+    "jest-html-reporter": "^3.10.2",
+    "jest-junit": "^16.0.0",
     "supertest": "6.3.3"
   }
 }
