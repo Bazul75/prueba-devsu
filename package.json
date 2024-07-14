@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "test": "jest --coverage --coverageReporters=text --coverageReporters=cobertura --coverageReporters=html"
+    "test": "jest --coverage"
   },
   "jest": {
     "transform": {
