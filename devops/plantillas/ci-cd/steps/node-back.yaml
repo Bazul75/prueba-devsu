@@ -12,7 +12,7 @@ steps:
       serviceKey: ${{ parameters.sonarProjectname }}
       serviceName: ${{ parameters.sonarProjectname }}
       createProject: 'true'
-      visibility: 'Public'
+      visibility: 'public'
       long_live_branches: '(master|qa)'
       sonarQualityGate: '9'
     
