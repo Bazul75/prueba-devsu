@@ -20,6 +20,9 @@ parameters:
   - name: pathToManifest
     type: string
     default: 'kubernetes/deploy.yaml'
+  - name: sonarProjectname
+    type: string
+    default: 'devsu-app'
 
 stages:
   - stage: BuildNodeApp
@@ -36,6 +39,7 @@ stages:
               sonarSc: ${{ parameters.sonarSc }}
               dockerSc: ${{ parameters.dockerSc }}
               containerRepository: ${{ parameters.containerRepository }}
+              sonarProjectname: ${{ parameters.sonarProjectname }}
   - stage: DeployApp
     displayName: 'Deploy App'
     pool: ${{ parameters.agent }}

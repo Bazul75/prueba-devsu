@@ -9,8 +9,8 @@ steps:
     inputs:
       SonarCloud: ${{ parameters.sonarSc }}
       sonarOrganization: 'josedanielbaena'
-      serviceKey: '$(Build.Repository.Name)'
-      serviceName: '$(Build.Repository.Name)'
+      serviceKey: ${{ parameters.sonarProjectname }}
+      serviceName: ${{ parameters.sonarProjectname }}
       createProject: 'true'
       visibility: 'private'
       long_live_branches: '(master|qa)'
@@ -22,8 +22,8 @@ steps:
       organization: 'josedanielbaena'
       scannerMode: 'CLI'
       configMode: 'manual'
-      cliProjectKey: '(Build.Repository.Name)'
-      cliProjectName: '(Build.Repository.Name)'
+      cliProjectKey: ${{ parameters.sonarProjectname }}
+      cliProjectName: ${{ parameters.sonarProjectname }}
       cliSources: '.'
 
   - script: |

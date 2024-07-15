@@ -11,6 +11,7 @@ stages:
     agent: 'pruebas'
     nodeVersion: 18
     sonarSc: $(sonarSc)
+    sonarProjectname: 'prueba-devsu'
     dockerSc: $(dockerSc)
     containerRepository: $(containerRepository)
     k8sSc: $(k8sSc)
