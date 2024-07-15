@@ -55,6 +55,14 @@ spec:
       labels:
         app: devsu-app
     spec:
+      initContainers:
+      - name: init-permissions
+        image: busybox
+        command: ['sh', '-c', 'chmod 666 /app/dev.sqlite']
+        volumeMounts:
+        - name: devsu-app-storage
+          mountPath: /app
+          subPath: dev.sqlite
       containers:
         - name: devsu-app
           image: __containerRepository__:__Build.BuildId__
@@ -98,10 +106,6 @@ spec:
               port: 8000
             initialDelaySeconds: 30
             periodSeconds: 10
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/sh", "-c", "cp /data/dev.sqlite /app/dev.sqlite && chown appuser:appgroup /app/dev.sqlite && chmod 666 /app/dev.sqlite"]
       volumes:
         - name: devsu-app-storage
           persistentVolumeClaim:
