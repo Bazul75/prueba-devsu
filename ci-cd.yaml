@@ -6,7 +6,7 @@ variables:
 - group: devsu-app
 
 stages:
-- template: '.devops/plantillas/ci-cd/stages/cicd-stages.yaml'
+- template: './devops/plantillas/ci-cd/stages/cicd-stages.yaml'
   parameters:
     agent: 'pruebas'
     nodeVersion: 18
