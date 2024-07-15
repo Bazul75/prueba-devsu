@@ -34,7 +34,7 @@ stages:
             parameters:
               nodeVersion: ${{ parameters.nodeVersion }}
               sonarSc: ${{ parameters.sonarSc }}
-              dockerSc: ${{ parameters.sonarSc }}
+              dockerSc: ${{ parameters.dockerSc }}
               containerRepository: ${{ parameters.containerRepository }}
   - stage: DeployApp
     displayName: 'Deploy App'
