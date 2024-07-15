@@ -39,7 +39,7 @@ stages:
   - stage: DeployApp
     displayName: 'Deploy App'
     pool: ${{ parameters.agent }}
-    condition: dependsOn BuildNodeApp
+    dependsOn: BuildNodeApp
     jobs: 
       - job: DeployKubernetes
         displayName: 'Deploy App to Kubernetes'
