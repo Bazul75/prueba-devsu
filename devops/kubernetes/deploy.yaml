@@ -101,7 +101,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["/bin/sh", "-c", "ln -sf /data/dev.sqlite /app/dev.sqlite"]
+                command: ["/bin/sh", "-c", "cp /data/dev.sqlite /app/dev.sqlite && chown appuser:appgroup /app/dev.sqlite && chmod 666 /app/dev.sqlite"]
       volumes:
         - name: devsu-app-storage
           persistentVolumeClaim:
