@@ -1,28 +1,4 @@
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: devsu-app-pv
-spec:
-  capacity:
-    storage: 200Mi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "C:\\k8s-data"
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: devsu-app-pvc
-  namespace: default
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 200Mi
----
-apiVersion: v1
 kind: Secret
 metadata:
   name: devsu-app-secrets
@@ -55,14 +31,6 @@ spec:
       labels:
         app: devsu-app
     spec:
-      initContainers:
-      - name: init-permissions
-        image: busybox
-        command: ['sh', '-c', 'chmod 666 /app/dev.sqlite']
-        volumeMounts:
-        - name: devsu-app-storage
-          mountPath: /app
-          subPath: dev.sqlite
       containers:
         - name: devsu-app
           image: __containerRepository__:__Build.BuildId__
@@ -91,9 +59,6 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "1000m"
-          volumeMounts:
-            - mountPath: /app
-              name: devsu-app-storage
           livenessProbe:
             httpGet:
               path: /health
@@ -106,10 +71,6 @@ spec:
               port: 8000
             initialDelaySeconds: 30
             periodSeconds: 10
-      volumes:
-        - name: devsu-app-storage
-          persistentVolumeClaim:
-            claimName: devsu-app-pvc
 ---
 apiVersion: v1
 kind: Service
