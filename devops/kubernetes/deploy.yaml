@@ -38,7 +38,7 @@ metadata:
   name: devsu-app-config
   namespace: default
 data:
-  DATABASE_NAME: "/data/dev.sqlite"
+  DATABASE_NAME: "/app/dev.sqlite"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -57,7 +57,7 @@ spec:
     spec:
       containers:
         - name: devsu-app
-          image: __containerRepository__:__Build.BuildId__
+          image: __containerRepository__:__build.BuilId__
           ports:
             - containerPort: 8000
           env:
@@ -84,7 +84,7 @@ spec:
               memory: "512Mi"
               cpu: "1000m"
           volumeMounts:
-            - mountPath: /data
+            - mountPath: /app
               name: devsu-app-storage
           livenessProbe:
             httpGet:
@@ -98,6 +98,10 @@ spec:
               port: 8000
             initialDelaySeconds: 30
             periodSeconds: 10
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "ln -sf /data/dev.sqlite /app/dev.sqlite"]
       volumes:
         - name: devsu-app-storage
           persistentVolumeClaim:
