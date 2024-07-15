@@ -57,7 +57,7 @@ spec:
     spec:
       containers:
         - name: devsu-app
-          image: __containerRepository__:__build.BuilId__
+          image: __containerRepository__:__Build.BuildId__
           ports:
             - containerPort: 8000
           env:
