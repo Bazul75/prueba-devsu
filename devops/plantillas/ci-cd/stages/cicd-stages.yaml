@@ -1,0 +1,54 @@
+parameters:
+  - name: agent
+    type: string
+    default: 'pruebas'
+  - name: nodeVersion
+    type: string
+    default: '18'
+  - name: sonarSc
+    type: string
+    default: 'sonar-sc'
+  - name: dockerSc
+    type: string
+    default: 'dockerhub-sc'
+  - name: containerRepository
+    type: string
+    default: 'prueba-devsu'
+  - name: k8sSc
+    type: string
+    default: 'k8s-sc'
+  - name: pathToManifest
+    type: string
+    default: 'kubernetes/deploy.yaml'
+  - name: sonarProjectname
+    type: string
+    default: 'devsu-app'
+
+stages:
+  - stage: BuildNodeApp
+    displayName: 'Build Node App'
+    pool:
+      vmImage: ubuntu-latest
+    jobs:
+      - job: BuildNode
+        displayName: 'Build Node App'
+        steps:
+          - template: ../steps/node-back.yaml
+            parameters:
+              nodeVersion: ${{ parameters.nodeVersion }}
+              sonarSc: ${{ parameters.sonarSc }}
+              dockerSc: ${{ parameters.dockerSc }}
+              containerRepository: ${{ parameters.containerRepository }}
+              sonarProjectname: ${{ parameters.sonarProjectname }}
+  - stage: DeployApp
+    displayName: 'Deploy App'
+    pool: ${{ parameters.agent }}
+    dependsOn: BuildNodeApp
+    jobs: 
+      - job: DeployKubernetes
+        displayName: 'Deploy App to Kubernetes'
+        steps:
+          - template: ../steps/deploy-k8s.yaml
+            parameters:
+              k8sSc: ${{ parameters.k8sSc }}
+              pathToManifest: ${{ parameters.pathToManifest }}

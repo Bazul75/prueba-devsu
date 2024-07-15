@@ -1,0 +1,74 @@
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: ${{ parameters.nodeVersion }}
+    displayName: "Install Node.js"
+
+  - task: sonarcloud-create-project@1
+    displayName: "Create SonarCloud Project"
+    inputs:
+      SonarCloud: ${{ parameters.sonarSc }}
+      sonarOrganization: 'josedanielbaena'
+      serviceKey: ${{ parameters.sonarProjectname }}
+      serviceName: ${{ parameters.sonarProjectname }}
+      createProject: 'true'
+      visibility: 'public'
+      long_live_branches: '(master|qa)'
+      sonarQualityGate: '9'
+    
+  - task: SonarCloudPrepare@2
+    inputs:
+      SonarCloud: ${{ parameters.sonarSc }}
+      organization: 'josedanielbaena'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: ${{ parameters.sonarProjectname }}
+      cliProjectName: ${{ parameters.sonarProjectname }}
+      cliSources: '.'
+
+  - script: |
+        npm install
+    displayName: 'Install dependencies'
+
+  - script: |
+        npm test
+    displayName: 'Run tests'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/*.xml'
+      failTaskOnFailedTests: true
+      failTaskOnFailureToPublishResults: true
+      testRunTitle: 'publish'
+    displayName: "Publish test results"
+
+  - task: publishCodeCoverageResults@2
+    inputs:
+      summaryFileLocation: '**/coverage/*.xml'
+      failIfCoverageEmpty: true
+    displayName: "Publish code coverage"
+
+  - task: SonarCloudAnalyze@2
+    inputs:
+      jdkVersion: 'JAVA_HOME_21_X64'
+    displayName: "Run SonarCloud Analysis"
+
+  - task: SonarCloudPublish@2
+    inputs:
+      pollingTimeoutSec: '300'
+    displayName: "Publish SonarCloud Analysis"
+
+  - task: sonarcloud-buildbreaker@2
+    inputs:
+      SonarCloud: ${{ parameters.sonarSc }}
+      organization: 'josedanielbaena'
+    displayName: "SonarCloud Build Breaker"
+
+  - task: Docker@2
+    inputs:
+      containerRegistry: '${{ parameters.dockerSc }}'
+      repository: '${{ parameters.containerRepository }}'
+      command: 'buildAndPush'
+      Dockerfile: '$(System.DefaultWorkingDirectory)/**/Dockerfile'
+    displayName: 'Build and push image'

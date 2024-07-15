@@ -1,0 +1,16 @@
+steps:
+  - task: replacetokens@6
+    inputs:
+      sources: '${{ parameters.pathToManifest }}'
+      tokenPattern: 'doubleunderscores'
+    displayname: 'Replace tokens'
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: '${{ parameters.k8sSc }}'
+      command: 'apply'
+      arguments: '-f ${{ parameters.pathToManifest }}'
+      secretType: 'dockerRegistry'
+      containerRegistryType: 'Azure Container Registry'
+    displayName: 'Deploy to Kubernetes'
