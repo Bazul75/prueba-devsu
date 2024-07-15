@@ -15,4 +15,4 @@ stages:
     dockerSc: $(dockerSc)
     containerRepository: $(containerRepository)
     k8sSc: $(k8sSc)
-    pathToManifest: '/devops/kubernetes/deploys.yaml'
+    pathToManifest: '/devops/kubernetes/deploy.yaml'
