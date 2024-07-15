@@ -29,8 +29,8 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  database_user: dXNlcg==
-  database_password: cGFzc3dvcmQ=
+  database_user: __user-db__
+  database_password: __user-pass__
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -57,7 +57,7 @@ spec:
     spec:
       containers:
         - name: devsu-app
-          image: bazul98/devsu-back:77
+          image: __containerRepository__:__buildBuilId__
           ports:
             - containerPort: 8000
           env:

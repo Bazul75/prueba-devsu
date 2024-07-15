@@ -1,0 +1,13 @@
+steps:
+  - task: replacetokens@6
+    inputs:
+      sources: '$(system.defaultWorkingDirectory)/${{ parameters.pathToManifest }}'
+      tokenPattern: 'doubleunderscores'
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: '${{ parameters.k8sSc }}'
+      command: 'apply'
+      arguments: '-f $(system.defaultWorkingDirectory)/${{ parameters.pathToManifest }}'
+      secretType: 'dockerRegistry'
+      containerRegistryType: 'Azure Container Registry'
