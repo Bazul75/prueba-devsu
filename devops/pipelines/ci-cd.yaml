@@ -6,7 +6,7 @@ variables:
 - group: devsu-app
 
 stages:
-- template: devops/plantillas/ci-cd/stages/cicd-stages.yml
+- template: ./devops/plantillas/ci-cd/stages/cicd-stages.yml
   parameters:
     agent: 'pruebas'
     nodeVersion: 18
@@ -14,4 +14,4 @@ stages:
     dockerSc: $(dockerSc)
     containerRepository: $(containerRepository)
     k8sSc: $(k8sSc)
-    pathToManifest: devops/kubernetes/deploy.yaml
+    pathToManifest: ./devops/kubernetes/deploy.yaml
