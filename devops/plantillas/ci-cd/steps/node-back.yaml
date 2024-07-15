@@ -54,7 +54,7 @@ steps:
       jdkVersion: 'JAVA_HOME_21_X64'
     displayName: "Run SonarCloud Analysis"
 
-  - task: SonarCloudQualityGate@1
+  - task: SonarCloudPublish@2
     inputs:
       pollingTimeoutSec: '300'
     displayName: "Check SonarCloud Quality Gate"
