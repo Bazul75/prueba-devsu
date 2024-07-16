@@ -7,13 +7,13 @@ variables:
   - name: "terraformStaRg"
     value: "iac-test"
   - name: "terraformSta"
-    value: "terraformstatescementos"
+    value: "terraformstatesdevsu"
   - name: "terraformStateKey"
     value: "qa.terraform.tfstate"
   - name: "terraformStaContainer"
     value: "qa-iac"
   - name: "acceskey"
-    value: "uhwfj1yV/2uE36Ij/qZ+uyKnxCjTxZ5E3slIc4xqqKqibhlyaG9uzVWEx1azxoviNCKtk3O9pg+8+AStRjG8nw=="
+    value: "cambiar"
   - group: service-application-azureJose
 
 stages:
