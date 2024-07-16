@@ -12,10 +12,7 @@ variables:
     value: "qa.terraform.tfstate"
   - name: "terraformStaContainer"
     value: "qa-iac"
-  - name: "acceskey"
-    value: "cambiar"
   - group: service-application-azureJose
-
 stages:
   - stage: DeployInfrastructure
     jobs:
