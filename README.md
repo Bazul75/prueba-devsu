@@ -58,8 +58,8 @@ To create a user, the endpoint **/api/users** must be consumed with the followin
 
 ```json
 {
-    "dni": "dni",
-    "name": "name"
+  "dni": "dni",
+  "name": "name"
 }
 ```
 
@@ -67,9 +67,9 @@ If the response is successful, the service will return an HTTP Status 200 and a 
 
 ```json
 {
-    "id": 1,
-    "dni": "dni",
-    "name": "name"
+  "id": 1,
+  "dni": "dni",
+  "name": "name"
 }
 ```
 
@@ -77,7 +77,7 @@ If the response is unsuccessful, we will receive status 400 and the following me
 
 ```json
 {
-    "error": "error"
+  "error": "error"
 }
 ```
 
@@ -93,11 +93,11 @@ If the response is successful, the service will return an HTTP Status 200 and a 
 
 ```json
 [
-    {
-        "id": 1,
-        "dni": "dni",
-        "name": "name"
-    }
+  {
+    "id": 1,
+    "dni": "dni",
+    "name": "name"
+  }
 ]
 ```
 
@@ -113,9 +113,9 @@ If the response is successful, the service will return an HTTP Status 200 and a 
 
 ```json
 {
-    "id": 1,
-    "dni": "dni",
-    "name": "name"
+  "id": 1,
+  "dni": "dni",
+  "name": "name"
 }
 ```
 
@@ -123,7 +123,7 @@ If the user id does not exist, we will receive status 404 and the following mess
 
 ```json
 {
-    "error": "User not found: <id>"
+  "error": "User not found: <id>"
 }
 ```
 
@@ -131,9 +131,7 @@ If the response is unsuccessful, we will receive status 400 and the following me
 
 ```json
 {
-    "errors": [
-        "error"
-    ]
+  "errors": ["error"]
 }
 ```
 

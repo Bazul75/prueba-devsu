@@ -1,0 +1,108 @@
+trigger:
+  branches:
+    include:
+      - main
+
+variables:
+  - name: "terraformStaRg"
+    value: "iac-test"
+  - name: "terraformSta"
+    value: "terraformstatesdevsu"
+  - name: "terraformStateKey"
+    value: "qa.terraform.tfstate"
+  - name: "terraformStaContainer"
+    value: "qa-iac"
+  - group: service-application-azureJose
+stages:
+  - stage: DeployInfrastructure
+    jobs:
+      - job: Job
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: TerraformInstaller@1
+            displayName: "Terraforn Install"
+            inputs:
+              terraformVersion: "latest"
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: "3.x"
+              addToPath: true
+              architecture: "x64"
+          - task: Bash@3
+            displayName: "Install Checkov"
+            inputs:
+              targetType: "inline"
+              script: |
+                pip install checkov \
+                pip install jq
+          - task: Bash@3
+            displayName: "Setting Environment Variables SP"
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Setting Environment Variables for Terraform"
+                echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$(CLIENT_ID)"
+                echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET]$(CLIENT_SECRET)"
+                echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(SUBSCRIPTION_ID)"
+                echo "##vso[task.setvariable variable=ARM_TENANT_ID]$(TENANT_ID)"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/iac/"
+          - task: Bash@3
+            inputs:
+              targetType: "inline"
+              script: |
+                echo $ARM_CLIENT_ID
+                echo $ARM_CLIENT_SECRET
+                echo $ARM_SUBSCRIPTION_ID
+                echo ARM_TENANT_ID
+          - task: Bash@3
+            displayName: "Terraform Init"
+            inputs:
+              targetType: "inline"
+              script: |
+                terraform init \
+                    -input=false \
+                    -backend-config="resource_group_name=$(terraformStaRg)" \
+                    -backend-config="storage_account_name=$(terraformSta)" \
+                    -backend-config="container_name=$(terraformStaContainer)" \
+                    -backend-config="key=$(terraformStateKey)"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/iac/"
+          - task: Bash@3
+            displayName: "Terraform Plan"
+            inputs:
+              targetType: "inline"
+              script: |
+                terraform plan -out=tf.plan
+              workingDirectory: "$(System.DefaultWorkingDirectory)/iac/"
+          - task: Bash@3
+            displayName: "Terraform Show"
+            inputs:
+              targetType: "inline"
+              script: 'terraform show -json tf.plan | jq "." > tf.json'
+              workingDirectory: "$(System.DefaultWorkingDirectory)/iac/"
+          - task: Bash@3
+            displayName: "Analisis Estatico de Codigo con Checkov"
+            inputs:
+              targetType: "inline"
+              script: |
+                ls
+                ruta=iac-test/src/tf.json
+                mkdir $(System.DefaultWorkingDirectory)/iac/checkov-report
+                checkov -f $(System.DefaultWorkingDirectory)/$ruta --output cli
+                checkov -f $(System.DefaultWorkingDirectory)/$ruta --output junitxml > $(System.DefaultWorkingDirectory)/iac/checkov-report/TEST-checkov-report.xml
+          - task: PublishTestResults@2
+            displayName: "Publish checkov Test Results"
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: "JUnit"
+              testResultsFiles: "**/TEST-*.xml"
+              searchFolder: "$(System.DefaultWorkingDirectory)/iac/checkov-report"
+              testRunTitle: "CheckOV Scan"
+          - task: Bash@3
+            displayName: "Terraform Apply"
+            condition: succeeded()
+            inputs:
+              targetType: "inline"
+              script: |
+                terraform apply -auto-approve tf.plan
+              workingDirectory: "$(System.DefaultWorkingDirectory)/iac/"
